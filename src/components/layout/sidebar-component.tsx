@@ -1,6 +1,5 @@
 "use client"
 
-import { adminMenu } from "@/app/admin/admin-menu"
 import { Button } from "@/components/ui/button"
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSkeleton, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, SidebarTrigger, useSidebar } from "@/components/ui/sidebar"
 import { MenuGroup, MenuItem } from "@/lib/utils"
@@ -11,21 +10,19 @@ import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
 import { Skeleton } from "../ui/skeleton"
 
-export function SidebarComponent() {
+type Props = {
+  initialMenu: MenuGroup[]
+}
+export function SidebarComponent({ initialMenu }: Props) {
   const pathname = usePathname()
   const { data: session } = useSession()
-  const userRole = session?.user?.role
   const { isMobile, setOpenMobile } = useSidebar()
 
   const [menu, setMenu] = useState<MenuGroup[] | null>(null)
 
   useEffect(() => {
-    if (userRole === "ADMIN" && pathname.startsWith("/admin")) {
-      setMenu(adminMenu)
-    } else {
-      setMenu(null)
-    }
-  }, [userRole, pathname])
+    setMenu(initialMenu)
+  }, [pathname, initialMenu])
 
   if (!menu) return <SidebarSkeleton />
   //if (!menu) return null

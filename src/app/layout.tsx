@@ -1,8 +1,6 @@
 import "@/app/globals.css"
 import { Header } from "@/components/layout/header"
 import { Providers } from "@/components/layout/providers/providers"
-import { SidebarComponent } from "@/components/layout/sidebar-component"
-import { SidebarProvider } from "@/components/ui/sidebar"
 import { Geist } from "next/font/google"
 
 const geist = Geist({ subsets: ["latin"] })

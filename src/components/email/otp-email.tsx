@@ -10,7 +10,7 @@ export default function OtpEmail({ code }: OtpEmailProps) {
   return (
     <Html>
       <Head />
-      <Preview>Verifica tu identidad para RC Starter Kit</Preview>
+      <Preview>Verifica tu identidad para Wap Track</Preview>
       <Tailwind>
         <Body className="bg-white font-sans">
           <Container className="mx-auto py-20 px-4">
@@ -47,10 +47,10 @@ export default function OtpEmail({ code }: OtpEmailProps) {
                 <br />
                 Contacta a{' '}
                 <Link
-                  href="mailto:soporte@rapha.uy"
+                  href="mailto:rapha.uy@rapha.uy"
                   className="text-blue-600 underline"
                 >
-                  soporte@rapha.uy
+                  rapha.uy@rapha.uy
                 </Link>{' '}
                 si no solicitaste este código.
               </Text>

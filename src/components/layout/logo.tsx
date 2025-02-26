@@ -3,8 +3,8 @@
 import { useTheme } from "next-themes"
 import Image from "next/image"
 
-export const text1= "RC"
-export const text2= "Starter"
+export const text1= "Wap"
+export const text2= "Track"
 export const image= false
 
 export function Logo() {
@@ -25,7 +25,8 @@ export function Logo() {
             </div>
         ) : (
             <div className="flex items-center">
-            <span className="text-foreground">{text1}</span>
+                {/* use the whatsapp green color */}
+            <span className="text-[#008000]">{text1}</span>
             <span className="text-muted-foreground">{text2}</span>
             </div>
         )}

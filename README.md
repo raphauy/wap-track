@@ -1,6 +1,4 @@
-# RC Starter Kit
-
-Starter point for RC projects
+# Wap Track
 
 ## Stack:
 

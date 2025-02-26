@@ -8,7 +8,7 @@ export async function sendOTP(email: string, code: string) {
     const result = await resend.emails.send({
       from: process.env.EMAIL_FROM!,
       to: email,
-      subject: 'Código de verificación para RC Starter Kit',
+      subject: 'Código de verificación para Wap Track',
       react: OtpEmail({ code }),
     });
 

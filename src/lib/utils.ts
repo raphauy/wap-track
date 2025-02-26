@@ -60,5 +60,28 @@ export function formatWhatsAppStyle(date: Date | string): string {
   }
 }
 
+// Función para generar el slug a partir de un texto
+export function generateSlug(text: string) {
+  return text?.toLowerCase()
+    .normalize('NFD')               // Normaliza caracteres Unicode
+    .replace(/[\u0300-\u036f]/g, '') // Elimina diacríticos (acentos, etc)
+    .replace(/\s+/g, '-')           // Reemplaza espacios con guiones
+    .replace(/[^\w\-]+/g, '')       // Remueve caracteres especiales
+    .replace(/\-\-+/g, '-')         // Reemplaza múltiples guiones con uno solo
+    .replace(/^-+/, '')             // Remueve guiones del inicio
+    .replace(/-+$/, '')             // Remueve guiones del final
+    || ''
+}
 
 
+export function getStatusLabel(status: string) {
+  if (status === 'open') {
+    return "Conectado"
+  } else if (status === 'close') {
+    return "Desconectado"
+  } else if (status === 'connecting') {
+    return "Conectando"
+  } else {
+    return "Desconocido"
+  }
+}

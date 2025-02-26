@@ -155,7 +155,7 @@ export function LoginForm({ requestedEmail }: Props) {
       >
         <div className="mb-7 w-full text-muted-foreground">
           <div className="flex items-center justify-center gap-2 mb-2"><p className="font-bold text-4xl text-center">Login</p><p className="text-2xl">🔐</p></div>
-          <p className="font-bold text-center mb-10">Bienvenido a RC Starter Kit</p>
+          <p className="font-bold text-center mb-10">Bienvenido a Wap Track</p>
           {showOTP && (
             <FormField
               control={form.control}

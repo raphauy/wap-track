@@ -1,5 +1,5 @@
 import { MenuGroup } from "@/lib/utils"
-import { Users, Settings, LayoutDashboard, FileText, Building2 } from "lucide-react"
+import { BriefcaseBusiness, LayoutDashboard, MessageCircleCode, Settings, Users } from "lucide-react"
 
 export const adminMenu: MenuGroup[] = [
   {
@@ -9,6 +9,16 @@ export const adminMenu: MenuGroup[] = [
         name: "Dashboard",
         icon: <LayoutDashboard className="h-4 w-4" />,
         href: "/admin",
+      },
+      {
+        name: "Clientes",
+        icon: <BriefcaseBusiness className="h-4 w-4" />,
+        href: "/admin/clients",
+      },
+      {
+        name: "Instancias WRC",
+        icon: <MessageCircleCode className="h-4 w-4" />,
+        href: "/admin/whatsapp-instances",
       },
       {
         name: "Usuarios",
