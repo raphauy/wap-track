@@ -73,10 +73,10 @@ export async function deleteClient(id: string) {
   return deleted
 }
 
-export async function getClientIdByChatwootAccountId(chatwootAccountId: string) {
+export async function getClientIdByChatwootAccountId(chatwootAccountId: number) {
   const client= await prisma.whatsappInstance.findFirst({
     where: {
-      chatwootAccountId
+      chatwootAccountId: chatwootAccountId
     },
     select: {
       clientId: true

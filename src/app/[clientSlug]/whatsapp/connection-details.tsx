@@ -19,7 +19,7 @@ const MAX_QR_CODE_COUNT = 10
 interface ConnectionDetailsProps {
   clientId: string
   instance: WRCInstance
-  chatwootAccountId: string | null | undefined
+  chatwootAccountId: number | null | undefined
   whatsappInboxId: string | null | undefined
 }
   

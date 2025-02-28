@@ -17,11 +17,15 @@ export async function POST(request: Request) {
         const accountName= json.account.name
         console.log("accountName: ", accountName)
 
-        const clientId= await getClientIdByChatwootAccountId(String(accountId))
+        const clientId= await getClientIdByChatwootAccountId(accountId)
         console.log("clientId: ", clientId)
         if (!clientId) throw new Error("Client not found")
 
         const phone= json.phone_number
+        if (!phone) {
+            console.log("phone not found, maybe it's a group, skipping contact")
+            return NextResponse.json({ data: "ACK" }, { status: 200 })
+        }
         const name= json.name
         const contactValues: ContactFormValues= {
             chatwootId: String(json.id),

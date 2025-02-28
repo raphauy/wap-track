@@ -6,7 +6,7 @@ export type WhatsappInstanceDAO = {
 	id: string
 	externalId: string
 	name: string
-	chatwootAccountId: string | undefined
+	chatwootAccountId: number | undefined
 	chatwootUrl: string | undefined
 	chatwootAccessToken: string | undefined
 	whatsappInboxId: string | undefined
@@ -19,7 +19,7 @@ export type WhatsappInstanceDAO = {
 export const WhatsappInstanceSchema = z.object({
 	externalId: z.string().min(1, "externalId is required."),
 	name: z.string().min(1, "name is required."),
-	chatwootAccountId: z.string().optional(),
+	chatwootAccountId: z.number().optional(),
 	chatwootUrl: z.string().optional(),
 	chatwootAccessToken: z.string().optional(),
 	whatsappInboxId: z.string().optional(),
@@ -109,7 +109,7 @@ export async function getChatwootAccountId(clientId: string) {
   return client.chatwootAccountId
 } 
 
-export async function setChatwootData(clientId: string, chatwootAccountId: string, chatwootAccessToken: string, chatwootUrl: string, whatsappInboxId: string) {
+export async function setChatwootData(clientId: string, chatwootAccountId: number, chatwootAccessToken: string, chatwootUrl: string, whatsappInboxId: string) {
   const whatsappInstance = await prisma.whatsappInstance.findFirst({
     where: {
       clientId

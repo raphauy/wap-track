@@ -6,7 +6,7 @@ import { isYesterday } from "date-fns"
 import { isToday } from "date-fns"
 import { parseISO } from "date-fns"
 import { es } from "date-fns/locale";
-import { toZonedTime } from "date-fns-tz";
+import { toZonedTime, format as formatTZ } from "date-fns-tz";
 
 export type MenuGroup = {
   name: string
@@ -83,5 +83,30 @@ export function getStatusLabel(status: string) {
     return "Conectando"
   } else {
     return "Desconocido"
+  }
+}
+
+export function getRoleColor(role: string) {
+  if (role === "assistant") return "bg-green-500"
+  if (role === "system") return "bg-orange-500"
+  if (role === "data") return "bg-blue-500"
+  return "bg-black"
+}
+
+export function getFormatInTimezone(date: Date, timeZone: string) {
+  
+  // Convert the date to the desired time zone
+  const zonedDate = toZonedTime(date, timeZone);
+  
+  const today = toZonedTime(new Date(), timeZone);
+
+  if (
+    zonedDate.getDate() === today.getDate() &&
+    zonedDate.getMonth() === today.getMonth() &&
+    zonedDate.getFullYear() === today.getFullYear()
+  ) {
+    return formatTZ(zonedDate, "HH:mm", { timeZone, locale: es });
+  } else {
+    return formatTZ(zonedDate, "yyyy/MM/dd", { timeZone, locale: es });
   }
 }

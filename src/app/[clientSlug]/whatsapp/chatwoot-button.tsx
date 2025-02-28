@@ -14,7 +14,7 @@ type ChatwootButtonProps = {
 }
 export default function ChatwootButton({ clientId, instanceName }: ChatwootButtonProps) {
     const [loadingSetChatwoot, setLoadingSetChatwoot] = useState(false);
-    const [chatwootAccountId, setChatwootAccountId] = useState("");
+    const [chatwootAccountId, setChatwootAccountId] = useState<number | null>(null);
 
     function handleEnableChatwoot() {
       if (!chatwootAccountId) {
@@ -45,8 +45,8 @@ export default function ChatwootButton({ clientId, instanceName }: ChatwootButto
             <Input
               type="text"
               placeholder="ID de la cuenta de Chatwoot"
-              value={chatwootAccountId}
-              onChange={(e) => setChatwootAccountId(e.target.value)}
+              value={chatwootAccountId ? chatwootAccountId.toString() : ""}
+              onChange={(e) => setChatwootAccountId(e.target.value ? parseInt(e.target.value) : null)}
             />
             <Button onClick={handleEnableChatwoot} className="col-span-2 mt-2">
               { loadingSetChatwoot ? <Loader className="w-4 h-4 mr-2 animate-spin" /> : <MessageSquare className="w-4 h-4 mr-2" /> }

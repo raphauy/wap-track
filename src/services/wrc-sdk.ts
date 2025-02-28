@@ -75,24 +75,74 @@ export async function createInstanceBasic(instanceName: string): Promise<CreateI
     }
 
     console.log("baseURL", baseURL)
+    console.log("instanceName", instanceName)
+    console.log("apiKey", apiKey ? "Configurado" : "No configurado")
 
     try {
-        const response = await axios.post<CreateInstanceResponse>(`${baseURL}/instance/create`, { instanceName, groupsIgnore: false }, {
-            headers: {
-                'apiKey': `${apiKey}`,
-            },
-        })
+        const payload = { 
+            instanceName,
+            groupsIgnore: false,
+            qrcode: false,
+            integration: "WHATSAPP-BAILEYS",
+        };
+        
+        console.log("Enviando payload:", JSON.stringify(payload))
+        
+        const response = await axios.post<CreateInstanceResponse>(
+            `${baseURL}/instance/create`, 
+            payload, 
+            {
+                headers: {
+                    'apiKey': apiKey,
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
 
+        console.log("Respuesta recibida:", response.status)
         return response.data
     } catch (error: unknown) {
+        console.error("ERROR COMPLETO:", error);
+        
         if (error instanceof Error) {
-            console.error('Error creating instance:', error.message)
-        } else if (axios.isAxiosError(error) && error.response) {
-            console.error('Error creating instance:', error.response.data)
-        } else {
-            console.error('Error desconocido al crear la instancia')
+            console.error('Error creating instance:', error.message);
+            console.error('Error stack:', error.stack);
         }
-        throw error
+        
+        if (axios.isAxiosError(error)) {
+            console.error('=== DETALLES DEL ERROR AXIOS ===');
+            console.error('Status:', error.response?.status);
+            console.error('Status text:', error.response?.statusText);
+            
+            if (error.response?.data) {
+                console.error('Response data:', typeof error.response.data);
+                try {
+                    console.error(JSON.stringify(error.response.data, null, 2));
+                } catch (e) {
+                    console.error('No se pudo convertir a JSON:', error.response.data);
+                }
+            }
+            
+            if (error.response?.headers) {
+                console.error('Response headers:');
+                Object.entries(error.response.headers).forEach(([key, value]) => {
+                    console.error(`  ${key}: ${value}`);
+                });
+            }
+            
+            if (error.config) {
+                console.error('Request config:');
+                console.error('  URL:', error.config.url);
+                console.error('  Method:', error.config.method);
+                console.error('  Headers:', error.config.headers);
+                console.error('  Data:', error.config.data);
+                console.error('  BaseURL:', error.config.baseURL);
+            }
+        } else {
+            console.error('Error desconocido al crear la instancia');
+        }
+        
+        throw error;
     }
 }
 

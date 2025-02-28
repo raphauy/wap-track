@@ -64,7 +64,7 @@ export async function restartInstanceAction(instanceName: string) {
     return instance
 }
 
-export async function enableChatwootAction(clientId: string, instanceName: string, chatwootAccountId: string) {
+export async function enableChatwootAction(clientId: string, instanceName: string, chatwootAccountId: number) {
     const url= process.env.CHATWOOT_URL
     const token= process.env.CHATWOOT_ACCESS_TOKEN
     if (!url || !token) {
@@ -77,7 +77,7 @@ export async function enableChatwootAction(clientId: string, instanceName: strin
 
     const params: ChatwootParams = {
         enabled: true,
-        accountId: chatwootAccountId,
+        accountId: String(chatwootAccountId),
         token,
         url,
         signMsg: false,
