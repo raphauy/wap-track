@@ -58,10 +58,17 @@ export async function getContactDAOByPhone(phone: string) {
     
 export async function createContact(data: ContactFormValues) {
 
-  // check if contact already exists
+  // check if contact already exists by chatwootId
   const existingContact= await getContactByChatwootId(data.chatwootId || "", data.clientId)
   if (existingContact) {
     const updated= await updateContact(existingContact.id, data)
+    return updated
+  }
+
+  // check if contact already exists by phone
+  const existingContactByPhone = await getContactDAOByPhone(data.phone)
+  if (existingContactByPhone) {
+    const updated = await updateContact(existingContactByPhone.id, data)
     return updated
   }
 

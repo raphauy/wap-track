@@ -11,7 +11,7 @@ export default async function ClientPage({ params }: Props) {
   const client = await getClientDAOBySlug(clientSlug)
   return (
     <div>
-      <p className="text-2xl font-bold">{client.name}</p>
+      <p className="text-2xl font-bold mt-2">{client.name}</p>
     </div>
   )
 }

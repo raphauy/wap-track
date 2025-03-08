@@ -159,7 +159,13 @@ model Contact {
   updatedAt     DateTime    @updatedAt                      // gennext: skip.zod
 
   groups        GroupContact[]
-
+  expenses      Expense[]
+  expenseShares ExpenseShare[]
+  balances      Balance[]
+  
+  paymentsFrom  Payment[]   @relation("PaymentFrom")
+  paymentsTo    Payment[]   @relation("PaymentTo")
+  
   @@unique([clientId, chatwootId])
 }
 
@@ -227,7 +233,9 @@ model Group {
   clientId          String
 
   contacts          GroupContact[]
-
+  expenses          Expense[]
+  payments          Payment[]
+  balances          Balance[]
   @@unique([clientId, chatwootConversationId])
 }
 
@@ -243,4 +251,74 @@ model GroupContact {
 
   @@id([groupId, contactId])
   @@unique([groupId, contactId])
+}
+
+model Expense {
+  id            String    @id @default(cuid())
+  description   String
+  amount        Float
+  date          DateTime  @default(now())
+
+  paidBy        Contact   @relation(fields: [paidById], references: [id], onDelete: Cascade)
+  paidById      String
+
+  group         Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId       String
+
+  shares        ExpenseShare[]
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model ExpenseShare {
+  id            String    @id @default(cuid())
+  expense       Expense   @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  expenseId     String
+
+  contact       Contact   @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  contactId     String
+
+  amount        Float     // monto que le corresponde a este contacto
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@unique([expenseId, contactId])
+}
+
+model Payment {
+  id             String    @id @default(cuid())
+  fromContact    Contact   @relation("PaymentFrom", fields: [fromContactId], references: [id], onDelete: Cascade)
+  fromContactId  String
+
+  toContact      Contact   @relation("PaymentTo", fields: [toContactId], references: [id], onDelete: Cascade)
+  toContactId    String
+
+  amount         Float
+  date           DateTime  @default(now())
+
+  group          Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId        String
+
+  note           String?
+
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model Balance {
+  id          String   @id @default(cuid())
+  
+  contact     Contact  @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  contactId   String
+
+  group       Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId     String
+
+  amount      Float    // saldo positivo (a favor) o negativo (en contra)
+
+  updatedAt   DateTime @updatedAt
+
+  @@unique([contactId, groupId])
 }

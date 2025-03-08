@@ -47,7 +47,10 @@ export function GroupForm({ id, closeDialog }: Props) {
     if (id) {
       getGroupDAOAction(id).then((data) => {
         if (data) {
-          form.reset(data)
+          form.setValue("name", data.name)
+          form.setValue("chatwootConversationId", data.chatwootConversationId)
+          form.setValue("clientId", data.clientId)
+          data.appId && form.setValue("appId", data.appId)
         }
         Object.keys(form.getValues()).forEach((key: any) => {
           if (form.getValues(key) === null) {

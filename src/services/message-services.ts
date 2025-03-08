@@ -29,10 +29,13 @@ export const MessageSchema = z.object({
 export type MessageFormValues = z.infer<typeof MessageSchema>
 
 
-export async function getMessagesDAO() {
+export async function getMessagesDAO(groupId: string) {
   const found = await prisma.message.findMany({
+    where: {
+      groupId: groupId
+    },
     orderBy: {
-      id: 'asc'
+      createdAt: 'asc'
     },
   })
   return found as MessageDAO[]
@@ -91,7 +94,5 @@ export async function onGroupMessageReceived(content: string, groupId: string) {
   }
   const created= await createMessage(messageValues)
 
-  await processMessage(created.id)
-  
   return created
 }

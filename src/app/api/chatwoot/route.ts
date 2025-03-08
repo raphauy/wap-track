@@ -1,6 +1,6 @@
 import { getClientDAO, getClientIdByChatwootAccountId } from "@/services/client-services";
 import { getContactByPhone } from "@/services/contact-services";
-import { createGroup, getGroupByChatwootConversationId, GroupFormValues } from "@/services/group-services";
+import { createGroup, getGroupByChatwootConversationId, GroupFormValues, processMessage } from "@/services/group-services";
 import { onGroupMessageReceived } from "@/services/message-services";
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
@@ -131,8 +131,9 @@ export async function POST(request: Request) {
         //     phone= json.sender.name
         // }
 
-        await onGroupMessageReceived(content, group.id)
-    
+        const created= await onGroupMessageReceived(content, group.id)
+        await processMessage(created.id)  
+
         return NextResponse.json({ data: "ACK" }, { status: 200 })
     
     } catch (error) {

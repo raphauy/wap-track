@@ -6,9 +6,11 @@ import { convertToCoreMessages, generateText } from "ai"
 import { ContactDAO, getContactsDAO, getContactsOfGroup } from "./contact-services"
 import { groupTools } from "./tools"
 import { sendTextToConversation } from "./chatwoot"
-import { saveLLMResponse } from "./function-call-services"
+import { saveLLMTextResponse } from "./function-call-services"
 import { saveToolCallResponse } from "./function-call-services"
 import { getChatwootAccountId } from "./whatsappinstance-services"
+import { AppDAO } from "./app-services"
+import { getGastosContext } from "./app-gastos"
 
 type ClientWithSlug = {
   slug: string
@@ -17,7 +19,8 @@ type ClientWithSlug = {
 export type GroupDAO = {
 	id: string
 	chatwootConversationId: number
-	appId: string | undefined
+	appId: string | undefined | null
+  app: AppDAO | undefined | null
 	name: string
 	createdAt: Date
 	updatedAt: Date
@@ -85,10 +88,34 @@ export async function getGroupDAO(id: string) {
         select: {
           slug: true
         }
-      }
+      },
+      app: true
     }
   })
   return found as GroupDAO
+}
+
+export async function getFullGroupDAO(id: string): Promise<GroupDAO> {
+  const found = await prisma.group.findUnique({
+    where: { 
+      id 
+    },
+    include: {
+      client: true,
+      app: true,
+      contacts: {
+        include: {
+          contact: true
+        }
+      }
+    }
+  })
+  if (!found) throw new Error("Group not found")
+  const res= {
+    ...found,
+    contacts: found.contacts.map(gc => gc.contact) as ContactDAO[]
+  }
+  return res as GroupDAO
 }
 
 export async function getGroupContactsDAO(id: string): Promise<ContactDAO[]> {
@@ -134,6 +161,22 @@ export async function updateGroup(id: string, data: GroupFormValues) {
 }
 
 export async function addContactToGroup(groupId: string, contactId: string) {
+  // Verificar si la relación ya existe
+  const existing = await prisma.groupContact.findUnique({
+    where: {
+      groupId_contactId: {
+        groupId,
+        contactId
+      }
+    }
+  });
+
+  // Si ya existe, devolver la relación existente
+  if (existing) {
+    return existing;
+  }
+
+  // Si no existe, crear la relación
   const created = await prisma.groupContact.create({
     data: {
       groupId,
@@ -191,8 +234,13 @@ export async function processMessage(id: string) {
             },
           },
           client: true,
-          app: true
-        }
+          app: true,
+          contacts: {
+            include: {
+              contact: true
+            }
+          }
+        },
       }
     }
   })
@@ -204,8 +252,15 @@ export async function processMessage(id: string) {
 
   if (!group.app?.prompt) throw new Error("App or App prompt not found")
 
-  const groupContext= await getGroupContext(group.id)
-  const context= group.app.prompt + "\n" + groupContext
+  // Transformar el grupo para que cumpla con GroupDAO
+  const groupDAO: GroupDAO = {
+    ...group,
+    contacts: group.contacts.map(gc => gc.contact) as ContactDAO[]
+  }
+
+  const groupContext= await getGroupContext(groupDAO)
+  const gastosContext= await getGastosContext(groupDAO)
+  const context= group.app.prompt + "\n" + groupContext + "\n" + gastosContext
   console.log("context: " + context)
   //await updateContext(conversation.id, context)
 
@@ -234,7 +289,7 @@ export async function processMessage(id: string) {
   const usage= result.usage
   const text= result.text
 
-  await saveLLMResponse(text, result.finishReason, usage, group.id)
+  await saveLLMTextResponse(text, usage, group.id)
 
   const chatwootAccountId= await getChatwootAccountId(client.id)
   if (!chatwootAccountId) throw new Error("Chatwoot accountId not found")
@@ -247,19 +302,16 @@ export async function processMessage(id: string) {
 
 }
 
-async function getGroupContext(groupId: string) {
-
-  const group= await getGroupDAO(groupId)
-  if (!group) throw new Error("Group not found")
+export async function getGroupContext(group: GroupDAO) {
 
   let groupContext= "Información de este grupo:\n"
   groupContext+= `- id: ${group.id}, name: ${group.name}\n\n`
 
-  const contacts= await getContactsOfGroup(groupId)
+  const contacts= group.contacts
   if (!contacts || contacts.length === 0) {
-    groupContext+= "No hay contactos registrados en el grupo"
+    groupContext+= "No hay participantes registrados en el grupo"
   } else {
-    groupContext+= "Los contactos registrados en el grupo son:\n"
+    groupContext+= "Los participantes registrados en el grupo son:\n"
     contacts.forEach(contact => {
       groupContext+= `- id: ${contact.id}, name: ${contact.name}, phone: ${contact.phone}\n`
     })

@@ -48,7 +48,8 @@ export function AppForm({ id, closeDialog }: Props) {
     if (id) {
       getAppDAOAction(id).then((data) => {
         if (data) {
-          form.reset(data)
+          form.setValue("name", data.name)
+          data.prompt && form.setValue("prompt", data.prompt)
         }
         Object.keys(form.getValues()).forEach((key: any) => {
           if (form.getValues(key) === null) {

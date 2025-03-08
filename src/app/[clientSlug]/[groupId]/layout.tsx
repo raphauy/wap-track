@@ -25,14 +25,14 @@ export default async function ChatLayout({ children, params }: Props) {
 
   return (
     <>
-      <div className="flex flex-grow w-full">
-        <div className="flex flex-grow p-1 w-full">
+      <div className="flex flex-grow w-full h-full">
+        <div className="flex flex-grow w-full gap-2">
           <div className="w-[350px] flex-shrink-0 overflow-hidden">
             <Suspense fallback={<GroupsTableSkeleton />}>
               <GroupsTable params={params} />
             </Suspense>
           </div>
-          <div className="flex flex-grow w-full">
+          <div className="flex flex-grow w-full h-full">
             {children}
           </div>
         </div>

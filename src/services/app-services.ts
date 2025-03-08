@@ -4,7 +4,7 @@ import { prisma } from "@/lib/db"
 export type AppDAO = {
 	id: string
 	name: string
-	prompt: string | undefined
+	prompt: string | undefined | null
 	createdAt: Date
 	updatedAt: Date
 }
@@ -75,3 +75,4 @@ export async function setPrompt(prompt: string, appId: string) {
   })
   return updated
 }
+

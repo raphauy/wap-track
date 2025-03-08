@@ -41,7 +41,7 @@ export default async function ClientLayout({ children, params }: Props) {
             <SidebarComponent initialMenu={clientMenu} />
           </div>
           
-          <main className="p-2 w-full flex-1 overflow-auto mt-10 md:mt-0">
+          <main className="p-2 w-full h-[calc(100svh)] pt-16 flex-1">
             {children}
           </main>
         </div>

@@ -110,7 +110,7 @@ export function DataTable<TData, TValue>({ columns, data, columnsOff }: DataTabl
           </Table>
         </div>
       </div>
-      <DataTablePagination table={table} subject="chat"/>
+      {/* <DataTablePagination table={table} subject="chat"/> */}
     </div>
   )
 }

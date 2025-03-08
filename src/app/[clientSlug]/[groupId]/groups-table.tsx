@@ -14,20 +14,20 @@ export async function GroupsTable({ params }: Props) {
 
     const groups = await getGroupsDAO(client.id)
     if (!groups || groups.length === 0) {
-        return <div className="py-4 mx-auto text-muted-foreground dark:text-white w-full text-center">
+        return <div className="py-2 mx-auto text-muted-foreground dark:text-white w-full text-center">
             No hay grupos
         </div>
     }
 
     return (
-        <div className="py-4 mx-auto text-muted-foreground dark:text-white w-full">
+        <div className="py-2 mx-auto text-muted-foreground dark:text-white w-full">
             <DataTable columns={columns} data={groups} />
         </div>
     )
 } 
 
 export function GroupsTableSkeleton() {
-    return <div className="py-4 mx-auto text-muted-foreground dark:text-white w-full overflow-hidden">
+    return <div className="py-2 mx-auto text-muted-foreground dark:text-white w-full overflow-hidden">
         {/* Input skeleton */}
         <div className="mb-4">
             <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded-md animate-pulse"></div>

@@ -49,7 +49,7 @@ export default function GPTData({ gptData, slug }: Props) {
                 }
                 </div>
                 <p className="mr-4 font-bold">{functionName}</p>
-                <CodeBlock code={jsonReplaced} showLineNumbers={false} />                
+                <CodeBlock code={jsonReplaced} showLineNumbers={false} />
             </div>
         )        
     }

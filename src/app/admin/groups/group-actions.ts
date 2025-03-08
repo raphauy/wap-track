@@ -1,11 +1,15 @@
 "use server"
   
 import { revalidatePath } from "next/cache"
-import { GroupDAO, GroupFormValues, createGroup, updateGroup, getGroupDAO, deleteGroup } from "@/services/group-services"
+import { GroupDAO, GroupFormValues, createGroup, updateGroup, getGroupDAO, deleteGroup, GroupDAOWithMessages, getGroupDAOWithMessages } from "@/services/group-services"
 
 
 export async function getGroupDAOAction(id: string): Promise<GroupDAO | null> {
     return getGroupDAO(id)
+}
+
+export async function getGroupDAOWithMessagesAction(id: string): Promise<GroupDAOWithMessages | null> {
+    return getGroupDAOWithMessages(id)
 }
 
 export async function createOrUpdateGroupAction(id: string | null, data: GroupFormValues): Promise<GroupDAO | null> {       
