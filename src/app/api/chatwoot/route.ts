@@ -5,7 +5,7 @@ import { onGroupMessageReceived } from "@/services/message-services";
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
-export const maxDuration = 299
+export const maxDuration = 60
 
 export async function POST(request: Request) {
 
