@@ -2,7 +2,7 @@ import { tool } from 'ai';
 import { z } from 'zod';
 import { ContactFormValues, createContact, getContactDAOByPhone } from './contact-services';
 import { addContactToGroup, getGroupDAO, getLastGroupDAO } from './group-services';
-import { addExpense, addPayment, getGroupBalances } from './app-gastos';
+import { addExpense, addPayment, getExpenses, getGroupBalances } from './app-gastos';
 
 export const groupTools= {
     registrarParticipante: tool({
@@ -61,6 +61,17 @@ export const groupTools= {
                 console.error("Error al registrar pago de compensación:", error)
                 return "No se pudo registrar el pago de compensación. Por favor, intente nuevamente."
             }
+        },
+    }),
+    listarGastos: tool({
+        description: 'Lista los últimos gastos de un grupo. No hace falta preguntar al usuario por el limit, utiliza 20, en caso de que el usuario quiera mencione un valor para el limit, utiliza ese valor.',
+        parameters: z.object({
+            groupId: z.string().describe('El id del grupo'),
+            limit: z.number().describe('El número de gastos a listar, por defecto 20').optional(),
+        }),
+        execute: async ({ groupId, limit=20 }) => {
+            const expenses= await getExpenses(groupId, limit)
+            return expenses
         },
     })
 }

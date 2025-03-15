@@ -9,14 +9,9 @@ import { Message } from 'ai';
 import { Clock, Loader, Phone, SendIcon, User, UserPlus, Receipt, DollarSign, FileText } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 import Textarea from "react-textarea-autosize";
-
-// Mock de usuarios para simular un chat grupal
-const mockUsers = [
-  { id: 1, name: 'Agustín (Shock)', avatar: '👨‍💻' },
-  { id: 2, name: 'Joaco', avatar: '👨‍🚀' },
-  { id: 3, name: 'IA Asistente', avatar: '🤖' }
-];
+import remarkGfm from 'remark-gfm';
 
 export default function Chat() {
 
@@ -48,14 +43,6 @@ export default function Chat() {
 
   const disabled = status === 'streaming' || input.length === 0;
 
-  // Asignar un usuario aleatorio a cada mensaje para simular chat grupal
-  const chatMessages = messages.map((m, index) => ({
-    ...m,
-    user: m.role === 'user' 
-      ? mockUsers[Math.floor(index % 2)] // Usuario aleatorio entre los dos primeros
-      : mockUsers[2] // El asistente IA
-  }));
-
   // Scroll al último mensaje cuando se añade uno nuevo
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -75,7 +62,7 @@ export default function Chat() {
 
           {/* Contenedor de mensajes */}
           <div className="flex-1 p-4 space-y-3">
-            {chatMessages.map((m) => {
+            {messages.map((m) => {
               const isUser = m.role === 'user';
               if (isUser) return <UserRowMessage key={m.id} message={m} />
 
@@ -162,9 +149,17 @@ function UserRowMessage({message}: {message: Message}) {
           {userName}
         </div>
         
-        <div className="whitespace-pre-wrap text-sm mt-1 text-zinc-800 dark:text-zinc-200">
-          {content}
-        </div>
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
+          components={{
+            // open links in new tab
+            a: (props) => (
+              <a {...props} target="_blank" rel="noopener noreferrer" />
+            ),
+          }}
+        >
+          {content}                
+        </ReactMarkdown>            
         
         <div className="text-xs text-right mt-1 text-zinc-500">
           {createdAt ? createdAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
@@ -192,9 +187,17 @@ function AssistantRowMessage({message}: {message: Message}) {
         </div>
         
         {/* Contenido del mensaje */}
-        <div className="whitespace-pre-wrap text-sm mt-1 text-zinc-800 dark:text-zinc-200">
-          {content}
-        </div>
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
+          components={{
+            // open links in new tab
+            a: (props) => (
+              <a {...props} target="_blank" rel="noopener noreferrer" />
+            ),
+          }}
+        >
+          {message.content}                
+        </ReactMarkdown>            
         
         {/* Hora del mensaje (simulada) */}
         <div className="text-xs text-right mt-1 text-zinc-500">

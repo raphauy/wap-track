@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { GroupDAO } from "@/services/group-services"
 import { ColumnDef } from "@tanstack/react-table"
 import { format } from "date-fns"
-import { ArrowUpDown } from "lucide-react"
+import { ArrowUpDown, ShoppingCart } from "lucide-react"
 import Link from "next/link"
 
 export const columns: ColumnDef<GroupDAO>[] = [
@@ -55,4 +55,22 @@ export const columns: ColumnDef<GroupDAO>[] = [
       )
     },
   },
+  {
+    accessorKey: "gastos",
+    header: ({ column }) => {
+      return null
+    },
+    cell: ({ row }) => {
+      const data= row.original
+      return (
+        <div className="flex items-center justify-start flex-1 max-w-full overflow-hidden">
+          <Link href={`/${data.client.slug}/${data.id}/gastos`} prefetch={false} className="w-full overflow-hidden">
+              <Button variant="link" className="px-0">
+                <ShoppingCart className="w-4 h-4" />
+              </Button>
+          </Link>
+        </div>
+      )
+    }
+  }
 ]

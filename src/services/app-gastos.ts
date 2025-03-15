@@ -225,3 +225,30 @@ export async function getGroupBalances(groupId: string) {
     },
   });
 }
+
+export async function getExpenses(groupId: string, limit: number = 20) {
+  return await prisma.expense.findMany({
+    where: { groupId },
+    select: {
+      id: true,
+      description: true,
+      amount: true,
+      paidBy: {
+        select: {
+          name: true,
+          imageUrl: true
+        }
+      },
+      shares: {
+        select: {
+          id: true
+        }
+      }
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+    take: limit,
+  });
+}
+

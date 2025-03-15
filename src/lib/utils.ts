@@ -110,3 +110,10 @@ export function getFormatInTimezone(date: Date, timeZone: string) {
     return formatTZ(zonedDate, "yyyy/MM/dd", { timeZone, locale: es });
   }
 }
+
+export function formatCurrency(amount: number): string {
+  return new Intl.NumberFormat('es-UY', {
+    style: 'currency',
+    currency: 'UYU'
+  }).format(amount)
+}

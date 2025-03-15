@@ -13,16 +13,6 @@ export function getClientMenu(clientSlug: string): MenuGroup[] {
         },
         {
           name: "Simulador",
-          icon: <MessageCircle className="h-4 w-4" />,
-          href: `/${clientSlug}/simulator`,
-        },
-      ],
-    },
-    {
-      name: "Configuración",
-      items: [
-        {
-          name: "Grupos",
           icon: <Users className="h-4 w-4" />,
           href: `/${clientSlug}/groups`,
         },
