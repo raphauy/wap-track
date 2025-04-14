@@ -275,7 +275,7 @@ export async function processMessage(id: string) {
   
   const result= await generateText({
 //    model: openai('gpt-4o-mini'),
-    model: openai('gpt-4o'),
+    model: openai('gpt-4.1'),
     messages: convertToCoreMessages(messages),
     tools: groupTools,
     system: context,

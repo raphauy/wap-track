@@ -31,7 +31,7 @@ export async function POST(req: Request) {
   console.log("context: " + context)
 
   const result = streamText({
-    model: openai('gpt-4o-mini'),
+    model: openai('gpt-4.1'),
     system: context,
     messages,
     maxSteps: 5,
